@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class PocApplication {
 
 	public static void main(String[] args) {
-		System.out.println("HEllos");
+		System.out.println("Hellos");
 		SpringApplication.run(PocApplication.class, args);
 	}
 
