@@ -22,11 +22,12 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 public class MongoUserDAO {
     MongoCollection<User> collection;
 
-    public MongoUserDAO(){
+    public MongoUserDAO(String url){
         CodecRegistry pojoCodecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
                 fromProviders(PojoCodecProvider.builder().register("com.dpa.poc.User").automatic(true).build()));
 
-        MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017");
+        //"mongodb://localhost:27017"
+        MongoClient mongoClient = MongoClients.create(url);
         MongoDatabase database = mongoClient.getDatabase("mydb");
         collection = database.getCollection("user", User.class).withCodecRegistry(pojoCodecRegistry);
     }

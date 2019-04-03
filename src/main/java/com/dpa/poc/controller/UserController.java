@@ -4,6 +4,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import com.dpa.poc.data.MongoUserDAO;
 import com.dpa.poc.entity.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,15 +16,18 @@ public class UserController {
     private static final String template = "Hello, %s!";
     private final AtomicLong counter = new AtomicLong();
 
-    @RequestMapping("/greetings")
+    @Autowired
+    MongoUserDAO mongoUserDAO;
+
+    @RequestMapping("/create")
     public User greeting(@RequestParam(value="name") String name, @RequestParam(value="age") int age) {
-        MongoUserDAO mud = new MongoUserDAO();
-        User user = mud.getUserByName(name);
+
+        User user = mongoUserDAO.getUserByName(name);
 
         if(user == null){
             System.out.println("Creating User");
             user = new User(name, age);
-            mud.create(user);
+            mongoUserDAO.create(user);
         } else {
             System.out.println("Obtained User");
         }
