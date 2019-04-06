@@ -3,11 +3,16 @@ package com.dpa.poc.controller;
 import java.util.concurrent.atomic.AtomicLong;
 
 import com.dpa.poc.data.MongoUserDAO;
+import com.dpa.poc.entity.RegisterUser;
 import com.dpa.poc.entity.User;
+import com.dpa.poc.exception.InvalidPasswordException;
+import com.dpa.poc.exception.InvalidUserException;
+import com.dpa.poc.exception.UserExistsException;
+import com.dpa.poc.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "user")
@@ -17,20 +22,37 @@ public class UserController {
     private final AtomicLong counter = new AtomicLong();
 
     @Autowired
-    MongoUserDAO mongoUserDAO;
+    UserService userService;
 
-    @RequestMapping("/create")
-    public User greeting(@RequestParam(value="name") String name, @RequestParam(value="age") int age) {
+    @PutMapping("/register")
+    public ResponseEntity register(@RequestBody RegisterUser user) {
 
-        User user = mongoUserDAO.getUserByName(name);
 
-        if(user == null){
-            System.out.println("Creating User");
-            user = new User(name, age);
-            mongoUserDAO.create(user);
-        } else {
-            System.out.println("Obtained User");
+        try {
+            userService.registerUser(user);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity(e.getMessage(), HttpStatus.CONFLICT);
         }
-        return user;
+
+
+        return new ResponseEntity(user, HttpStatus.OK);
+    }
+
+    @RequestMapping("/login")
+    public ResponseEntity login(@RequestBody RegisterUser user) {
+        User loggedInUser = null;
+        try {
+            loggedInUser = userService.authenticateUser(user.getEmail(), user.getPassword());
+        } catch (InvalidUserException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_GATEWAY);
+        } catch (InvalidPasswordException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch(Exception e){
+            e.printStackTrace();
+            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity(loggedInUser, HttpStatus.OK);
+
     }
 }

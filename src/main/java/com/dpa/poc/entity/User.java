@@ -2,31 +2,62 @@ package com.dpa.poc.entity;
 
 public class User {
 
-    private String name;
-    private int age;
+    private String firstname;
+    private String lastname;
+    private String email;
+    private int birthmonth;
+    private int birthday;
+    private int birthyear;
 
     public User(){
 
     }
 
-    public User(String name, int age) {
-        this.name = name;
-        this.age = age;
+    public String getFirstname() {
+        return firstname;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public String getLastname() {
+        return lastname;
     }
 
-    public String getName() {
-        return name;
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
-    public int getAge() {
-        return age;
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public int getBirthmonth() {
+        return birthmonth;
+    }
+
+    public void setBirthmonth(int birthmonth) {
+        this.birthmonth = birthmonth;
+    }
+
+    public int getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(int birthday) {
+        this.birthday = birthday;
+    }
+
+    public int getBirthyear() {
+        return birthyear;
+    }
+
+    public void setBirthyear(int birthyear) {
+        this.birthyear = birthyear;
     }
 }
